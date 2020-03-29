@@ -4,7 +4,7 @@ from cerberus import Validator
 import datetime
 from copy import deepcopy
 import json
-from flask import jsonify
+from flask import jsonify, make_response
 import bcrypt
 
 VALIDATE = Validator(require_all=True).validate
@@ -19,17 +19,18 @@ def cryptography(pwd):
 
 def registerController(data):
     dataWithoutDate = deepcopy(data)
-    data['date'] = datetime.datetime.utcnow()
+    date = datetime.datetime.utcnow()
+    data['date'] = str(date)
     data['pwd'] = cryptography(data['pwd']).decode("utf-8")
     if VALIDATE(data, userSchema) == True:
         email = [user['email'] for user in usersController()[0]]
         if data['email'] not in email:
             USER.insert_one(data)
-            return dataWithoutDate, 201
+            return jsonify(dataWithoutDate), 201
         else:
-            return {"message": "Email already exists"}, 400
+            return jsonify({"message": "Email already exists"}), 400
     else:
-        return {"error": "Invalid data"}, 400
+        return jsonify({"error": "Invalid data"}), 400
 
 
 def usersController():
