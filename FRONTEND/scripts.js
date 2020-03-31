@@ -1,26 +1,31 @@
+var BASE_URL = "http://127.0.0.1:5000";
+
 async function getData() {
-  var response = await (await fetch("http://127.0.0.1:5000/users")).json();
-  console.log(response);
+  var response = await (await fetch(`${BASE_URL}/users`)).json();
+  return response;
 }
 
 async function postData(data) {
-  var response = await fetch("http://127.0.0.1:5000/register", {
+  const response = await fetch(`${BASE_URL}/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: data
+    body: JSON.stringify(data)
   });
-  console.log(await response.json());
+  if (await response.ok) {
+    alert("User successfully registered !");
+  } else {
+    alert("Incorrect data !");
+  }
 }
 
-function submit() {
-  var name = document.getElementById("name").value;
-  var email = document.getElementById("email").value;
-  var pwd = document.getElementById("pwd").value;
-  data = { name: name, email: email, pwd: pwd };
-  console.log(data);
+function register() {
+  let name = document.getElementById("name").value;
+  let email = document.getElementById("email").value;
+  let pwd = document.getElementById("pwd").value;
+  let data = { name: name, email: email, pwd: pwd };
   postData(data);
 }
 
-document.getElementById("submit").addEventListener("click", submit);
+document.getElementById("register").addEventListener("click", register);

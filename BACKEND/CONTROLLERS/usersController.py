@@ -21,16 +21,18 @@ def registerController(data):
     dataWithoutDate = deepcopy(data)
     date = datetime.datetime.utcnow()
     data['date'] = str(date)
-    data['pwd'] = cryptography(data['pwd']).decode("utf-8")
+    data['pwd'] = dataWithoutDate['pwd'] = cryptography(
+        data['pwd']).decode("utf-8")
+
     if VALIDATE(data, userSchema) == True:
         email = [user['email'] for user in usersController()[0]]
         if data['email'] not in email:
             USER.insert_one(data)
-            return jsonify(dataWithoutDate), 201
+            return dataWithoutDate, 201
         else:
-            return jsonify({"message": "Email already exists"}), 400
+            return {"message": "Email already exists"}, 400
     else:
-        return jsonify({"error": "Invalid data"}), 400
+        return {"error": "Invalid format data"}, 400
 
 
 def usersController():
