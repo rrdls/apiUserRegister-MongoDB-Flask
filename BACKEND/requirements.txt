@@ -63,7 +63,7 @@ post==2019.4.13
 prometheus-client==0.7.1
 prompt-toolkit==3.0.2
 public==2019.4.13
-py==1.8.1
+py==1.10.0
 pycodestyle==2.5.0
 pycparser==2.19
 Pygments==2.5.2
